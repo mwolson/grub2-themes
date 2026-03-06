@@ -102,6 +102,7 @@ After that, you can configure the theme as shown below. In this example it is in
  - If you made changes to icons, or added a new one:
    - Delete the existing icon, if there is one
    - Run `cd assets; ./render-all.sh`
+   - Standalone icons in `assets/custom-icons/*.{png,svg}` are rendered for all icon variants and resolutions
  - Create a pull request from your branch or fork
  - If any issues occur, report then to the [issue](https://github.com/vinceliuice/grub2-themes/issues) page
 
