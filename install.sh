@@ -116,11 +116,7 @@ generate() {
 
   # Determine which configuration file and assets to use
   if [[ -n "$custom_resolution" ]]; then
-    if has_command apt || has_command pacman || has_command eopkg; then
-      install_depends imagemagick
-    else
-      install_depends ImageMagick
-    fi
+    ensure_magick
     asset_type=$(get_asset_type "$custom_resolution")
     cp -a --no-preserve=ownership "${REO_DIR}/config/theme-${asset_type}.txt" "${THEME_DIR}/${theme}/theme.txt"
     # Replace resolution in theme.txt
@@ -135,11 +131,7 @@ generate() {
 
   # Use custom background.jpg as grub background image
   if [[ -f "${REO_DIR}/background.jpg" ]]; then
-    if has_command apt || has_command pacman || has_command eopkg; then
-      install_depends imagemagick
-    else
-      install_depends ImageMagick
-    fi
+    ensure_magick
     prompt -w "\n Using custom background.jpg as grub background image..."
     cp -a --no-preserve=ownership "${REO_DIR}/background.jpg" "${THEME_DIR}/${theme}/background.jpg"
     magick "${THEME_DIR}/${theme}/background.jpg" -auto-orient "${THEME_DIR}/${theme}/background.jpg"
@@ -468,6 +460,23 @@ install_depends() {
   if [ ! "$(which '${depend}' 2> /dev/null)" ]; then
     prompt -w "\n '${depend}' need to be installed for this shell"
     install_program "${depend}"
+  fi
+}
+
+ensure_magick() {
+  if has_command magick; then
+    return
+  fi
+
+  if has_command apt || has_command pacman || has_command eopkg; then
+    install_program imagemagick
+  else
+    install_program ImageMagick
+  fi
+
+  if ! has_command magick; then
+    prompt -e "\n 'magick' is required but was not found after installation"
+    exit 1
   fi
 }
 
