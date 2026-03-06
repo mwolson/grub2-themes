@@ -63,8 +63,6 @@ for icon in "${icons[@]}"; do
 
     if [[ "$icon" == *.svg ]]; then
         rsvg-convert -w "$size" -h "$size" "$icon" -o "$icon_path"
-    elif [[ "$resolution" == "1080p" ]]; then
-        cp "$icon" "$icon_path"
     else
         magick "$icon" -background none -resize "${size}x${size}" "PNG32:$icon_path"
     fi
